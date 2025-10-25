@@ -101,6 +101,7 @@ const ObservableModal: React.FC<{ observable: Observable | null; onClose: () => 
 const App: React.FC = () => {
   const [currentSceneId, setCurrentSceneId] = useState<string>('start');
   const [inventory, setInventory] = useState<string[]>([]);
+  const [showInventoryPanel, setShowInventoryPanel] = useState<boolean>(true);
   const [playerStats, setPlayerStats] = useState<PlayerStats>({ health: 100, maxHealth: 100, attack: 10, isDefending: false });
   const [isTransitioning, setIsTransitioning] = useState<boolean>(true);
   const [showSplash, setShowSplash] = useState<boolean>(true);
@@ -406,7 +407,7 @@ const App: React.FC = () => {
           )}
         </main>
       </div>
-      {inventory.length > 0 && !inBattle && (
+      {inventory.length > 0 && !inBattle && showInventoryPanel && (
         <footer className="fixed bottom-0 left-0 right-0 bg-[#f4f1e9]/80 backdrop-blur-sm border-t border-stone-300 p-2 text-center text-stone-700">
           <div className="max-w-prose mx-auto flex flex-wrap justify-center items-center gap-2">
              <span className="font-semibold self-center pr-2">Inventory:</span>
@@ -416,7 +417,25 @@ const App: React.FC = () => {
               </span>
             ))}
           </div>
+          <button
+            aria-label="Close inventory"
+            onClick={() => setShowInventoryPanel(false)}
+            className="absolute top-1 right-3 text-xs px-2 py-1 bg-stone-300/60 hover:bg-stone-300 rounded"
+          >
+            Close
+          </button>
         </footer>
+      )}
+
+      {/* Floating reopen button when inventory is hidden */}
+      {inventory.length > 0 && !inBattle && !showInventoryPanel && (
+        <button
+          aria-label="Open inventory"
+          onClick={() => setShowInventoryPanel(true)}
+          className="fixed bottom-4 right-4 bg-[#3a3a38] text-[#f4f1e9] px-3 py-2 rounded-full shadow-md"
+        >
+          Inventory ({inventory.length})
+        </button>
       )}
        <div className="fixed top-2 right-2 space-x-2">
          <button onClick={saveGame} className="px-3 py-1 text-xs bg-stone-300/50 hover:bg-stone-300/80 rounded transition-colors">Save</button>
